@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "out": "Main.js"
+  },
+  "files": [
+    "Main.ts",
+    "IntroState.ts",
+    "phaser/phaser.d.ts",
+    "GamePad.ts"
+  ]
+}
