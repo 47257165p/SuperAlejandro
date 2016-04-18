@@ -3,9 +3,105 @@
  <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
   <image source="Tiles/tiles_spritesheet.png" trans="ff00ff" width="914" height="936"/>
  </tileset>
- <layer name="Tile Layer 1" width="300" height="10">
+ <tileset firstgid="157" name="hill_smallAlt" tilewidth="48" tileheight="106" spacing="2">
+  <image source="Tiles/hill_smallAlt.png" trans="ff00ff" width="48" height="106"/>
+ </tileset>
+ <tileset firstgid="158" name="p1_spritesheet" tilewidth="72" tileheight="96" spacing="2">
+  <image source="Player/p1_spritesheet.png" trans="ff00ff" width="508" height="288"/>
+ </tileset>
+ <tileset firstgid="170" name="flyFly1" tilewidth="72" tileheight="36" spacing="2">
+  <image source="Enemies/flyFly1.png" trans="ff00ff" width="72" height="36"/>
+ </tileset>
+ <tileset firstgid="171" name="slimeWalk1" tilewidth="50" tileheight="28" spacing="2">
+  <image source="Enemies/slimeWalk1.png" trans="ff00ff" width="50" height="28"/>
+ </tileset>
+ <tileset firstgid="172" name="snailWalk1" tilewidth="54" tileheight="31" spacing="2">
+  <image source="Enemies/snailWalk1.png" trans="ff00ff" width="54" height="31"/>
+ </tileset>
+ <layer name="background" width="300" height="10">
+  <data encoding="base64" compression="zlib">
+   eJzt1sEJgDAMBdCuI7iE0ziFo7irRw+CFDVtg+/BP1piAk1LAQCAPLbeBQAAQCVvV/5s710AcNlDS8U3U0Qhjdi7Y6mdh31xetOLDH1s8X9P7oGvend3Tob5ZOK+jzVifyNqijhzlabZB6hB4mdjzjGZRUSS5AASabe4
+  </data>
+ </layer>
+ <layer name="ground" width="300" height="10">
   <data encoding="base64" compression="zlib">
    eJztl8ENwyAMRTl3lw7QAbJFe2/v6QAZI9s2OSAhyyYGDITmPwkpmJZ8PtilzgEAAAAAAAAAAMCSZWvvrX16CwFVmLb22Nq9txBQxGj7OLl6mlfj+UZltDPRGvhzzNJbwJ/B3aeuWK8sc0+6o+beXXO/d9Z6otF1Vu2tGc2HUO+U0FLWSOuTVb3yeXaF/5e0pkge5np7xd+QVHrmdnjW6XmnY2fKiV3bk4nPjtfceg2a+5RlbqzMfJJHOzfS977FPKVjM4lp+jl7E6tRJfVKs0etPSydJ3aue923rHN1dfx5p2PSZ6S6ltpekTnDsVAbnYPTe7SGr5O9K6l/R/Up7HO5o435uaT94/TSeOhNzFMuntrX7I22Rvlnmmdc3ZF8i/V9rJWHpfPUQFPDjvLVKlddwljME+27rXSVvtNav6SvpJ8aq7GuHo1bp+aZrjsnNrqHPamVX9r3/AAMpBbv
   </data>
  </layer>
+ <layer name="touchable" width="300" height="10">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIA7DZwL9RNOwiIa2CJgAAANCb6wAAAAAAAAAA8M4CXR0AGg==
+  </data>
+ </layer>
+ <objectgroup name="flys">
+  <object gid="170" x="1252" y="208.667"/>
+  <object gid="170" x="1860.97" y="360.424"/>
+  <object gid="170" x="4357.94" y="333.152"/>
+  <object gid="170" x="5915.52" y="251.333"/>
+  <object gid="170" x="6539.76" y="475.576"/>
+  <object gid="170" x="7400.36" y="296.788"/>
+  <object gid="170" x="8660.97" y="384.667"/>
+  <object gid="170" x="8151.88" y="348.303"/>
+  <object gid="170" x="9824.61" y="414.97"/>
+  <object gid="170" x="10561" y="242.242"/>
+  <object gid="170" x="11248.8" y="469.515"/>
+  <object gid="170" x="11473.1" y="308.909"/>
+  <object gid="170" x="11985.2" y="260.424"/>
+  <object gid="170" x="12136.7" y="475.576"/>
+  <object gid="170" x="12612.5" y="433.152"/>
+  <object gid="170" x="13809.5" y="278.606"/>
+  <object gid="170" x="13797.3" y="393.758"/>
+  <object gid="170" x="15233.7" y="205.879"/>
+  <object gid="170" x="15761" y="430.121"/>
+  <object gid="170" x="17097.3" y="275.576"/>
+  <object gid="170" x="18100.4" y="354.364"/>
+  <object gid="170" x="18824.6" y="384.667"/>
+  <object gid="170" x="20364" y="293.758"/>
+  <object gid="170" x="19903.4" y="381.636"/>
+  <object gid="170" x="19373.1" y="293.758"/>
+ </objectgroup>
+ <objectgroup name="bubles">
+  <object gid="171" x="3047.73" y="559.455"/>
+  <object gid="171" x="967" y="559.333"/>
+  <object gid="171" x="1638.33" y="280"/>
+  <object gid="171" x="1965.67" y="560"/>
+  <object gid="171" x="3639.67" y="490"/>
+  <object gid="171" x="4395" y="560"/>
+  <object gid="171" x="4753" y="280.667"/>
+  <object gid="171" x="5245.67" y="559.333"/>
+  <object gid="171" x="6245.67" y="210.667"/>
+  <object gid="171" x="7231" y="560.667"/>
+  <object gid="171" x="8763.67" y="490"/>
+  <object gid="171" x="8559.67" y="560.667"/>
+  <object gid="171" x="10029" y="560"/>
+  <object gid="171" x="10929.7" y="280"/>
+  <object gid="171" x="11703.7" y="420"/>
+  <object gid="171" x="12333" y="349.333"/>
+  <object gid="171" x="13313.7" y="350"/>
+  <object gid="171" x="13943.7" y="560"/>
+  <object gid="171" x="14648.3" y="210"/>
+  <object gid="171" x="15976.3" y="559.333"/>
+  <object gid="171" x="16609" y="490"/>
+  <object gid="171" x="17586.3" y="350"/>
+  <object gid="171" x="18983.7" y="560.667"/>
+  <object gid="171" x="20283" y="489.333"/>
+  <object gid="171" x="20768.3" y="420"/>
+  <object gid="171" x="19674.3" y="490"/>
+ </objectgroup>
+ <objectgroup name="snail">
+  <object gid="172" x="20168.3" y="489.667"/>
+  <object gid="172" x="19455.7" y="559.667"/>
+  <object gid="172" x="16392.3" y="559.667"/>
+  <object gid="172" x="15431" y="559"/>
+  <object gid="172" x="15106.3" y="560.333"/>
+  <object gid="172" x="14575" y="559"/>
+  <object gid="172" x="14194.3" y="559"/>
+  <object gid="172" x="10954.3" y="489.667"/>
+  <object gid="172" x="9452.33" y="559.667"/>
+  <object gid="172" x="8939.67" y="559"/>
+  <object gid="172" x="8192.33" y="560.333"/>
+  <object gid="172" x="4902.33" y="419"/>
+  <object gid="172" x="2930.33" y="559.667"/>
+  <object gid="172" x="1735" y="559.667"/>
+ </objectgroup>
 </map>

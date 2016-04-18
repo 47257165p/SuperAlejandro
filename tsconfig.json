@@ -8,7 +8,7 @@
   },
   "files": [
     "Main.ts",
-    "IntroState.ts",
+    "FirstStage.ts",
     "phaser/phaser.d.ts",
     "GamePad.ts"
   ]

@@ -5,15 +5,15 @@ module Game {
         global:any;
 
         constructor() {
-            super(500, 340, Phaser.AUTO, "gameDiv");
+            super(1400, 800, Phaser.AUTO, "gameDiv");
 
             this.global = {
                 puntos: 0
             };
 
-            this.state.add("introState", IntroState);
+            this.state.add("firstStage", FirstStage);
 
-            this.state.start("introState");
+            this.state.start("firstStage");
         }
     }
 }

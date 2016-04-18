@@ -9,12 +9,12 @@ var Game;
     var SuperAlejandro = (function (_super) {
         __extends(SuperAlejandro, _super);
         function SuperAlejandro() {
-            _super.call(this, 500, 340, Phaser.AUTO, "gameDiv");
+            _super.call(this, 1400, 800, Phaser.AUTO, "gameDiv");
             this.global = {
                 puntos: 0
             };
-            this.state.add("introState", Game.IntroState);
-            this.state.start("introState");
+            this.state.add("firstStage", Game.FirstStage);
+            this.state.start("firstStage");
         }
         return SuperAlejandro;
     })(Phaser.Game);
@@ -29,37 +29,25 @@ window.onload = function () {
  */
 var Game;
 (function (Game) {
-    var IntroState = (function (_super) {
-        __extends(IntroState, _super);
-        function IntroState() {
+    var FirstStage = (function (_super) {
+        __extends(FirstStage, _super);
+        function FirstStage() {
             _super.apply(this, arguments);
         }
-        IntroState.prototype.preload = function () {
+        FirstStage.prototype.preload = function () {
             _super.prototype.preload.call(this);
-            //Agregamos
-            this.load.image('introImage', 'assets/progressBar.png');
-            // Agregamos un texto de cargando a la pantalla
-            var etiquetaCargando = this.add.text(this.world.centerX, 150, 'cargando...', { font: '30px Arial', fill: '#ffffff' });
-            etiquetaCargando.anchor.setTo(0.5, 0.5);
-            // Muestra la barra de progreso
-            var progressBar = this.add.sprite(this.world.centerX, 200, 'progressBar');
-            progressBar.anchor.setTo(0.5, 0.5);
-            this.load.setPreloadSprite(progressBar);
-            // Precargamos los sprites
-            this.load.image("player", "assets/player.png");
-            this.load.image('paredV', 'assets/wallVertical.png');
-            this.load.image('paredH', 'assets/wallHorizontal.png');
-            this.load.image('moneda', 'assets/coin.png');
-            this.load.image('enemigo', 'assets/enemy.png');
-            // Cargamos una imagen que hará de fondo en la pantalla de menu
-            this.load.image('fondo', 'assets/background.png');
+            this.load.tilemap('tilemap', 'assets/firstStage.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.image('tilemapimage', 'assets/firstStage.png');
+            this.physics.startSystem(Phaser.Physics.ARCADE);
         };
-        IntroState.prototype.create = function () {
+        FirstStage.prototype.create = function () {
             _super.prototype.create.call(this);
-            this.game.state.start('menu');
+            this.tilemap = this.game.add.tilemap('tilemap');
+            /*this.tilemap.addTilesetImage('tiles_spritesheet', 'tilemapimage');
+            this.background = this.tilemap.createLayer('background');*/
         };
-        return IntroState;
+        return FirstStage;
     })(Phaser.State);
-    Game.IntroState = IntroState;
+    Game.FirstStage = FirstStage;
 })(Game || (Game = {}));
 //# sourceMappingURL=Main.js.map
