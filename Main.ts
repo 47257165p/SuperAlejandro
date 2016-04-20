@@ -5,7 +5,7 @@ module Game {
         global:any;
 
         constructor() {
-            super(1400, 800, Phaser.AUTO, "gameDiv");
+            super(1400, 700, Phaser.AUTO, "gameDiv");
 
             this.global = {
                 puntos: 0
