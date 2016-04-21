@@ -45,6 +45,7 @@ var Game;
         };
         FirstStage.prototype.create = function () {
             _super.prototype.create.call(this);
+            this.cursor = this.input.keyboard.createCursorKeys();
             this.configureMap();
             this.configurePlayer();
         };
@@ -56,10 +57,42 @@ var Game;
             this.lastBackground = this.tilemap.createLayer('lastBackground');
             this.background = this.tilemap.createLayer('background');
             this.ground = this.tilemap.createLayer('ground');
+            this.physics.arcade.enable(this.ground);
+            this.tilemap.setCollisionBetween(1, 10000, true, this.ground);
         };
         FirstStage.prototype.configurePlayer = function () {
-            var sprite = new sprite;
-            this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'playerSprites', null, null);
+            this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'playerSprites', 'waiting');
+            this.player.anchor.setTo(0.5, 0.5);
+            this.physics.arcade.enable(this.player);
+            this.player.body.gravity.y = 1000;
+            this.player.body.drag.setTo(600, 100);
+            this.game.camera.follow(this.player);
+        };
+        FirstStage.prototype.update = function () {
+            _super.prototype.update.call(this);
+            this.game.physics.arcade.collide(this.player, this.ground);
+            this.game.physics.arcade.collide(this.ground, this.player);
+            this.checkMoving();
+        };
+        FirstStage.prototype.checkMoving = function () {
+            // Si pulsamos el cursor izquierdo
+            if (this.cursor.left.isDown) {
+                // Movemos al jugador a la izquierda
+                this.player.body.acceleration.x = -200;
+            }
+            else if (this.cursor.right.isDown) {
+                // Movemos al jugador a la derecha
+                this.player.body.acceleration.x = 200;
+            }
+            else {
+                // el jugador se para
+                this.player.body.velocity.x = 0;
+            }
+            // Si pulsamos la flecha arriba y el jugador está tocando el suelo
+            if (this.cursor.up.isDown) {
+                // el jugador se mueve hacia arriba (salto)
+                this.player.body.velocity.y = -600;
+            }
         };
         return FirstStage;
     })(Phaser.State);

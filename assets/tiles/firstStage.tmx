@@ -18,6 +18,14 @@
  <tileset firstgid="172" name="snailWalk1" tilewidth="54" tileheight="31" spacing="2">
   <image source="Enemies/snailWalk1.png" trans="ff00ff" width="54" height="31"/>
  </tileset>
+ <tileset firstgid="173" name="bg" tilewidth="70" tileheight="70" spacing="2">
+  <image source="Tiles/bg.png" trans="ff00ff" width="256" height="256"/>
+ </tileset>
+ <layer name="lastBackground" width="300" height="10">
+  <data encoding="base64" compression="zlib">
+   eJztmcEOhCAMRPn/f1Hcdf0/PdDYsKCNkOxsmcPLgGkY20OTwhRCmAghBJj5IB4shBACjO5XKyGEAKP7lWis7FGR/yzlUlNLbK8Y9PNG8fSQA+v2re9EzPaovJIuan2nltheMejnjeLpIQfW7VTdy7Zw9oMNnE/SVa3v1BLbKwb9vFE8PeTwj3VrvVevef363p8QQizM2VrfD+lvCPMqPX3lwLrhepbo/c73FDlL5kPhaob0PiOje3rIgXXD9SzR0mNyah4W5M1Q5kPham5FmZFH9fSQA+uG61mipcfk1Dws7HezFHs=
+  </data>
+ </layer>
  <layer name="background" width="300" height="10">
   <data encoding="base64" compression="zlib">
    eJzt1sEJgDAMBdCuI7iE0ziFo7irRw+CFDVtg+/BP1piAk1LAQCAPLbeBQAAQCVvV/5s710AcNlDS8U3U0Qhjdi7Y6mdh31xetOLDH1s8X9P7oGvend3Tob5ZOK+jzVifyNqijhzlabZB6hB4mdjzjGZRUSS5AASabe4
