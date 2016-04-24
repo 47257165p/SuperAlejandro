@@ -11,19 +11,53 @@ var Game;
         function SuperAlejandro() {
             _super.call(this, 1400, 700, Phaser.AUTO, "gameDiv");
             this.global = {
-                puntos: 0
+                puntos: 0,
+                PLAYER_MAX_VELOCITY_X: 300
             };
+            this.state.add("menuStage", Game.MenuStage);
             this.state.add("firstStage", Game.FirstStage);
-            this.state.start("firstStage");
+            this.state.start("menuStage");
         }
         return SuperAlejandro;
     }(Phaser.Game));
     Game.SuperAlejandro = SuperAlejandro;
 })(Game || (Game = {}));
 window.onload = function () {
-    //probar var game quizás se pueda borrar y dejar simplemente new Game....
     var game = new Game.SuperAlejandro();
 };
+/**
+ * Created by Alejandro on 24/04/2016.
+ */
+var Game;
+(function (Game) {
+    var MenuStage = (function (_super) {
+        __extends(MenuStage, _super);
+        function MenuStage() {
+            _super.apply(this, arguments);
+        }
+        MenuStage.prototype.create = function () {
+            this.global = this.game.global;
+            //Damos color al background del menú
+            this.game.stage.backgroundColor = "#4488AA";
+            //Creamos un label con el nombre del juegoNombre del juego
+            var nameLabel = this.add.text(this.world.centerX, 80, 'SuperAlejandro Game', { font: '50px Arial', fill: '#ffffff' });
+            nameLabel.anchor.setTo(0.5, 0.5);
+            //Información de cómo empezar
+            var startLabel = this.add.text(this.world.centerX, this.world.centerY, 'Press enter to start', { font: '25px Arial', fill: '#ffffff' });
+            startLabel.anchor.setTo(0.5, 0.5);
+            //Creamos el input del enter
+            var pressEnter = this.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            //Le damos un método a enter para cuando lo pulsamos
+            pressEnter.onDown.addOnce(this.start, this);
+        };
+        MenuStage.prototype.start = function () {
+            // Start the actual game
+            this.game.state.start('firstStage');
+        };
+        return MenuStage;
+    }(Phaser.State));
+    Game.MenuStage = MenuStage;
+})(Game || (Game = {}));
 /**
  * Created by 47257165p on 06/04/16.
  */
@@ -40,43 +74,90 @@ var Game;
             this.load.image('muchmap', 'assets/tiles_spritesheet.png');
             this.load.image('hill', 'assets/hill_smallAlt.png');
             this.load.image('bg', 'assets/bg.png');
+            this.load.image('flyFly1', 'assets/flyFly1.png');
+            this.load.image('slime1', 'assets/slimeWalk1.png');
+            this.load.image('snail1', 'assets/snailWalk1.png');
             this.load.atlas('playerSprites', 'assets/p1_walk/p1_walk.png', 'assets/p1_walk/p1_walk.json');
             this.physics.startSystem(Phaser.Physics.ARCADE);
         };
         FirstStage.prototype.create = function () {
             _super.prototype.create.call(this);
+            this.global = this.game.global;
             this.cursor = this.input.keyboard.createCursorKeys();
             this.configureMap();
             this.configurePlayer();
+            this.configureFlys();
+            this.configureBubles();
+            this.configureSnails();
+            //Cambiamos los límites del mapa para ajustarlos al tamaño de nuestro mapa
             this.world.setBounds(0, 0, 21000, 700);
         };
         FirstStage.prototype.configureMap = function () {
+            //Añadimos la información al tilemap
             this.tilemap = this.game.add.tilemap('tilemap');
             this.tilemap.addTilesetImage('tiles_spritesheet', 'muchmap');
             this.tilemap.addTilesetImage('hill_smallAlt', 'hill');
             this.tilemap.addTilesetImage('bg', 'bg');
+            this.tilemap.addTilesetImage('flyFly1', 'flyFly1');
+            //Creamos los layers
             this.lastBackground = this.tilemap.createLayer('lastBackground');
             this.background = this.tilemap.createLayer('background');
             this.ground = this.tilemap.createLayer('ground');
             this.touchable = this.tilemap.createLayer('touchable');
+            //Le damos las físicas a los layers con los que necesitamos interactuar
             this.physics.arcade.enable(this.ground);
             this.physics.arcade.enable(this.touchable);
+            //Le decimos entre qué objetos queremos collide
             this.tilemap.setCollisionBetween(1, 10000, true, this.ground);
             this.tilemap.setCollisionBetween(1, 10000, true, this.touchable);
         };
         FirstStage.prototype.configurePlayer = function () {
-            this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'playerSprites');
+            //Creamos el sprite
+            this.player = this.game.add.sprite(200, 450, 'playerSprites');
+            //Damos el anchor adecuado para que concuerde con el dibujo
             this.player.anchor.setTo(0.5, 0.5);
             this.configureAnimations();
+            //Otorgamos físicas al sprite
             this.physics.arcade.enable(this.player);
+            //Le damos gravedad para que no se quede volando al saltar
             this.player.body.gravity.y = 800;
+            //Le otorgamos rozamiento para que no se deslice permanentemente
+            this.player.body.drag.x = 800;
+            //Restringimos la velocidad máxima
+            this.player.body.maxVelocity.x = this.global.PLAYER_MAX_VELOCITY_X;
+            //Fijamos la cámara en el player
             this.game.camera.follow(this.player);
+            //Activamos la animación waiting
             this.player.play('waiting');
         };
+        FirstStage.prototype.configureFlys = function () {
+            //Creamos el grupo de flys
+            this.flys = this.game.add.group();
+            this.flys.enableBody = true;
+            //Creamos todos los objetos flys cuya id sea 170 mediante la imagen precargada flyFly1
+            //y se lo añadimos al grupo flys
+            this.tilemap.createFromObjects('flys', 170, 'flyFly1', 0, true, false, this.flys);
+        };
+        FirstStage.prototype.configureBubles = function () {
+            //Creamos el grupo de bubles
+            this.bubles = this.game.add.group();
+            this.bubles.enableBody = true;
+            //Creamos todos los objetos bubles cuya id sea 171 mediante la imagen precargada slime1
+            //y se lo añadimos al grupo bubles
+            this.tilemap.createFromObjects('bubles', 171, 'slime1', 0, true, false, this.bubles);
+        };
+        FirstStage.prototype.configureSnails = function () {
+            //Creamos el grupo de snails
+            this.snails = this.game.add.group();
+            this.snails.enableBody = true;
+            //Creamos todos los objetos snails cuya id sea 172 mediante la imagen precargada snail1
+            //y se lo añadimos al grupo snails
+            this.tilemap.createFromObjects('snail', 172, 'snail1', 0, true, false, this.flys);
+        };
+        //Método para añadir animations al player mediante un JsonAtlas
         FirstStage.prototype.configureAnimations = function () {
             this.player.animations.add('waiting', ['wait1'], 1, true);
-            this.player.animations.add('moveRight', ['move1', 'move2', 'move3', 'move4', 'move5', 'move6', 'move7', 'move8'], 10, true);
-            //this.player.animations.add('moveLeft', [8,9,10,11,12,13,14,15], 10,true);
+            this.player.animations.add('move', ['move1', 'move2', 'move3', 'move4', 'move5', 'move6', 'move7', 'move8'], 10, true);
             this.player.animations.add('jump', ['jump1', 'jump2'], 2, true);
         };
         FirstStage.prototype.update = function () {
@@ -85,29 +166,40 @@ var Game;
             this.checkMoving();
         };
         FirstStage.prototype.checkMoving = function () {
-            // Si pulsamos el cursor izquierdo
+            //Comprobamos si el cursor izquierdo está pulsado
             if (this.cursor.left.isDown) {
-                // Movemos al jugador a la izquierda
-                this.player.body.acceleration.x = -200;
+                //Movemos al player a la izquierda
+                this.player.body.acceleration.x = -180;
+                //Si el player está mirando a la derecha le cambiamos la escala a la inversa para que se gire
+                this.player.scale.x = -1;
+                //Activamos las animaciones de moverse
+                this.player.play('move');
             }
             else if (this.cursor.right.isDown) {
-                // Movemos al jugador a la derecha
-                this.player.body.acceleration.x = 200;
-                this.player.play('moveRight');
+                //Movemos el player a la derecha
+                this.player.body.acceleration.x = 180;
+                //Comprobamos si el player estaba girado a la izquierda,
+                // si es así cambia la escala a inversa para girarse
+                if (this.player.scale.x = -1) {
+                    this.player.scale.x = 1;
+                }
+                //Activamos las animaciones de moverse
+                this.player.play('move');
             }
             else {
-                // el jugador se para
+                //El player se para y activa la animación de parado
                 this.player.play('waiting');
                 this.player.body.acceleration.x = 0;
-                this.player.body.velocity.x = 0;
             }
-            // Si pulsamos la flecha arriba y el jugador está tocando el suelo
-            if (this.cursor.up.isDown) {
-                // el jugador se mueve hacia arriba (salto)
-                this.player.body.velocity.y = -600;
+            //Comprobamos pulsamos la flecha arriba y el jugador está tocando el suelo
+            //El método touching no funciona ya que con collide devuelve siempre false
+            if (this.cursor.up.isDown && this.player.body.blocked.down) {
+                //El jugador se mueve hacia arriba (salto) y activa la animación de salto
+                this.player.body.velocity.y = -500;
                 this.player.play('jump');
             }
         };
+        //Método de collide entre los elementos
         FirstStage.prototype.checkCollide = function () {
             this.game.physics.arcade.collide(this.player, this.ground);
             this.game.physics.arcade.collide(this.player, this.touchable);
