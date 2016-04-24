@@ -9,6 +9,7 @@ module Game {
         private background:Phaser.TilemapLayer;
         private lastBackground:Phaser.TilemapLayer;
         private ground:Phaser.TilemapLayer;
+        private touchable:Phaser.TilemapLayer;
         private player:Phaser.Sprite;
         private cursor:Phaser.CursorKeys;
 
@@ -20,7 +21,7 @@ module Game {
             this.load.image('muchmap', 'assets/tiles_spritesheet.png');
             this.load.image('hill', 'assets/hill_smallAlt.png');
             this.load.image('bg', 'assets/bg.png');
-            this.load.atlasJSONHash('playerSprites', 'assets/p1_walk/p1_walk.png', 'assets/p1_walk/p1_walk.json');
+            this.load.atlas('playerSprites', 'assets/p1_walk/p1_walk.png', 'assets/p1_walk/p1_walk.json');
 
             this.physics.startSystem(Phaser.Physics.ARCADE);
         }
@@ -31,6 +32,7 @@ module Game {
             this.cursor = this.input.keyboard.createCursorKeys();
             this.configureMap();
             this.configurePlayer();
+            this.world.setBounds(0, 0, 21000, 700);
         }
 
         configureMap():void
@@ -42,8 +44,11 @@ module Game {
             this.lastBackground = this.tilemap.createLayer('lastBackground');
             this.background = this.tilemap.createLayer('background');
             this.ground = this.tilemap.createLayer('ground');
+            this.touchable = this.tilemap.createLayer('touchable');
             this.physics.arcade.enable(this.ground);
+            this.physics.arcade.enable(this.touchable);
             this.tilemap.setCollisionBetween(1, 10000, true, this.ground);
+            this.tilemap.setCollisionBetween(1, 10000, true, this.touchable);
         }
 
         configurePlayer():void
@@ -51,20 +56,29 @@ module Game {
             this.player = this.game.add.sprite(
                 this.game.world.centerX,
                 this.game.world.centerY,
-                'playerSprites', 'waiting');
+                'playerSprites');
             this.player.anchor.setTo(0.5, 0.5);
+            this.configureAnimations();
             this.physics.arcade.enable(this.player);
-            this.player.body.gravity.y = 1000;
-            this.player.body.drag.setTo(600, 100);
+            this.player.body.gravity.y = 800;
             this.game.camera.follow(this.player);
+            this.player.play('waiting');
         }
 
+        configureAnimations()
+        {
+            this.player.animations.add('waiting', ['wait1'], 1, true);
+            this.player.animations.add('moveRight',
+                ['move1', 'move2', 'move3', 'move4', 'move5', 'move6', 'move7', 'move8'],
+                10, true);
+            //this.player.animations.add('moveLeft', [8,9,10,11,12,13,14,15], 10,true);
+            this.player.animations.add('jump', ['jump1', 'jump2'], 2, true);
+        }
 
         update():void {
             super.update();
-            this.game.physics.arcade.collide(this.player, this.ground);
-            this.game.physics.arcade.collide(this.ground, this.player);
 
+            this.checkCollide();
             this.checkMoving();
         }
 
@@ -80,11 +94,14 @@ module Game {
             {
                 // Movemos al jugador a la derecha
                 this.player.body.acceleration.x = 200;
+                this.player.play('moveRight')
             }
             // Si no se pulsan ni el cursor izquierdo ni el derecho
             else
             {
                 // el jugador se para
+                this.player.play('waiting');
+                this.player.body.acceleration.x = 0;
                 this.player.body.velocity.x = 0;
             }
             // Si pulsamos la flecha arriba y el jugador está tocando el suelo
@@ -92,7 +109,14 @@ module Game {
             {
                 // el jugador se mueve hacia arriba (salto)
                 this.player.body.velocity.y = -600;
+                this.player.play('jump');
             }
+        }
+
+        checkCollide():void
+        {
+            this.game.physics.arcade.collide(this.player, this.ground);
+            this.game.physics.arcade.collide(this.player, this.touchable);
         }
     }
 }
