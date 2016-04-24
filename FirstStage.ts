@@ -31,12 +31,16 @@ module Game {
             this.load.image('slime1', 'assets/slimeWalk1.png');
             this.load.image('snail1', 'assets/snailWalk1.png');
             this.load.atlas('playerSprites', 'assets/p1_walk/p1_walk.png', 'assets/p1_walk/p1_walk.json');
+            this.load.audio('jump', 'assets/jump.wav');
+            this.load.audio('stageClear', 'assets/stageClear.wav');
+            this.load.audio('died', 'assets/died.wav');
+            this.load.audio('gameOver', 'assets/gameOver.wav');
 
             this.physics.startSystem(Phaser.Physics.ARCADE);
         }
 
         create():void
-        {   
+        {
             super.create();
             this.lives = 3;
             this.global = (<SuperAlejandro>this.game).global;
@@ -207,7 +211,8 @@ module Game {
             {
                 //El jugador se mueve hacia arriba (salto) y activa la animación de salto
                 this.player.body.velocity.y = -500;
-                this.player.play('jump');
+                var jumpSound = this.game.add.audio('jump');
+                jumpSound.play();
             }
         }
 
@@ -228,10 +233,14 @@ module Game {
             this.labelLives.setText('Lives: '+this.lives);
             if (this.lives == 0)
             {
+                var gameOverSound = this.game.add.audio('gameOver');
+                gameOverSound.play();
                 this.game.state.start('gameOverStage');
             }
             else
             {
+                var diedSound = this.game.add.audio('died');
+                diedSound.play();
                 this.configurePlayer();
             }
         }
