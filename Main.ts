@@ -8,12 +8,12 @@ module Game {
             super(1400, 700, Phaser.AUTO, "gameDiv");
 
             this.global = {
-                puntos: 0,
                 PLAYER_MAX_VELOCITY_X: 300
             };
 
             this.state.add("menuStage", MenuStage);
             this.state.add("firstStage", FirstStage);
+            this.state.add("gameOverStage", GameOverStage);
 
             this.state.start("menuStage");
         }

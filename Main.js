@@ -11,11 +11,11 @@ var Game;
         function SuperAlejandro() {
             _super.call(this, 1400, 700, Phaser.AUTO, "gameDiv");
             this.global = {
-                puntos: 0,
                 PLAYER_MAX_VELOCITY_X: 300
             };
             this.state.add("menuStage", Game.MenuStage);
             this.state.add("firstStage", Game.FirstStage);
+            this.state.add("gameOverStage", Game.GameOverStage);
             this.state.start("menuStage");
         }
         return SuperAlejandro;
@@ -36,11 +36,10 @@ var Game;
             _super.apply(this, arguments);
         }
         MenuStage.prototype.create = function () {
-            this.global = this.game.global;
             //Damos color al background del menú
             this.game.stage.backgroundColor = "#4488AA";
             //Creamos un label con el nombre del juegoNombre del juego
-            var nameLabel = this.add.text(this.world.centerX, 80, 'SuperAlejandro Game', { font: '50px Arial', fill: '#ffffff' });
+            var nameLabel = this.game.add.text(this.world.centerX, 80, 'SuperAlejandro Game', { font: '50px Arial', fill: '#ffffff' });
             nameLabel.anchor.setTo(0.5, 0.5);
             //Información de cómo empezar
             var startLabel = this.add.text(this.world.centerX, this.world.centerY, 'Press enter to start', { font: '25px Arial', fill: '#ffffff' });
@@ -82,6 +81,7 @@ var Game;
         };
         FirstStage.prototype.create = function () {
             _super.prototype.create.call(this);
+            this.lives = 3;
             this.global = this.game.global;
             this.cursor = this.input.keyboard.createCursorKeys();
             this.configureMap();
@@ -89,6 +89,7 @@ var Game;
             this.configureFlys();
             this.configureBubles();
             this.configureSnails();
+            this.livesLabel();
             //Cambiamos los límites del mapa para ajustarlos al tamaño de nuestro mapa
             this.world.setBounds(0, 0, 21000, 700);
         };
@@ -116,13 +117,19 @@ var Game;
             this.player = this.game.add.sprite(200, 450, 'playerSprites');
             //Damos el anchor adecuado para que concuerde con el dibujo
             this.player.anchor.setTo(0.5, 0.5);
-            this.configureAnimations();
+            this.configurePlayerAnimations();
             //Otorgamos físicas al sprite
             this.physics.arcade.enable(this.player);
             //Le damos gravedad para que no se quede volando al saltar
             this.player.body.gravity.y = 800;
             //Le otorgamos rozamiento para que no se deslice permanentemente
             this.player.body.drag.x = 800;
+            /*//Hacemos que el player choque con los límites del mapa
+            this.player.body.collideWorldBounds = true;
+            //Hacemos que compruebe si se choca
+            this.player.checkWorldBounds = true;
+            //Si
+            this.player.events.onOutOfBounds.add(this.killBall, this);*/
             //Restringimos la velocidad máxima
             this.player.body.maxVelocity.x = this.global.PLAYER_MAX_VELOCITY_X;
             //Fijamos la cámara en el player
@@ -155,10 +162,17 @@ var Game;
             this.tilemap.createFromObjects('snail', 172, 'snail1', 0, true, false, this.flys);
         };
         //Método para añadir animations al player mediante un JsonAtlas
-        FirstStage.prototype.configureAnimations = function () {
+        FirstStage.prototype.configurePlayerAnimations = function () {
             this.player.animations.add('waiting', ['wait1'], 1, true);
             this.player.animations.add('move', ['move1', 'move2', 'move3', 'move4', 'move5', 'move6', 'move7', 'move8'], 10, true);
             this.player.animations.add('jump', ['jump1', 'jump2'], 2, true);
+        };
+        FirstStage.prototype.livesLabel = function () {
+            //Creamos un label con el número de vidas
+            this.labelLives = this.add.text(90, 50, 'Lives: ' + this.lives, { font: '35px Arial', fill: '#AS2700' });
+            this.labelLives.anchor.setTo(0.5, 0.5);
+            //Fijamos el label a la cámara
+            this.labelLives.fixedToCamera = true;
         };
         FirstStage.prototype.update = function () {
             _super.prototype.update.call(this);
@@ -203,9 +217,60 @@ var Game;
         FirstStage.prototype.checkCollide = function () {
             this.game.physics.arcade.collide(this.player, this.ground);
             this.game.physics.arcade.collide(this.player, this.touchable);
+            if (this.player.y > this.world.height) {
+                this.killPlayer();
+            }
+        };
+        FirstStage.prototype.killPlayer = function () {
+            this.player.kill();
+            this.lives = this.lives - 1;
+            this.labelLives.setText('Lives: ' + this.lives);
+            if (this.lives == 0) {
+                this.game.state.start('gameOverStage');
+            }
+            else {
+                this.configurePlayer();
+            }
         };
         return FirstStage;
     }(Phaser.State));
     Game.FirstStage = FirstStage;
+})(Game || (Game = {}));
+/**
+ * Created by Alejandro on 24/04/2016.
+ */
+var Game;
+(function (Game) {
+    var GameOverStage = (function (_super) {
+        __extends(GameOverStage, _super);
+        function GameOverStage() {
+            _super.apply(this, arguments);
+        }
+        GameOverStage.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+        };
+        GameOverStage.prototype.create = function () {
+            _super.prototype.create.call(this);
+            //Damos color al background del menú
+            this.game.stage.backgroundColor = "#aaaaa";
+            //Creamos un label con el nombre del juegoNombre del juego
+            this.gameName = this.add.text(700, 100, 'SuperAlejandro Game', { font: '50px Arial', fill: '#ffffff' });
+            this.gameName.anchor.setTo(0.5, 0.5);
+            this.gameName.fixedToCamera = true;
+            //Información de cómo empezar
+            this.pressLabel = this.game.add.text(700, 200, 'GAME OVER Press enter to restart', { font: '25px Arial', fill: '#ffffff' });
+            this.pressLabel.anchor.setTo(0.5, 0.5);
+            //Creamos el input del enter
+            var pressEnter = this.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            //Le damos un método a enter para cuando lo pulsamos
+            pressEnter.onDown.addOnce(this.start, this);
+        };
+        GameOverStage.prototype.start = function () {
+            // Start the actual game
+            this.game.state.start('firstStage');
+        };
+        return GameOverStage;
+    }(Phaser.State));
+    Game.GameOverStage = GameOverStage;
 })(Game || (Game = {}));
 //# sourceMappingURL=Main.js.map

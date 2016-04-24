@@ -10,6 +10,7 @@
     "Main.ts",
     "MenuStage.ts",
     "FirstStage.ts",
+    "GameOverStage.ts",
     "phaser/phaser.d.ts",
     "GamePad.ts"
   ]

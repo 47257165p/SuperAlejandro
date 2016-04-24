@@ -16,6 +16,8 @@ module Game {
         player:Phaser.Sprite;
         cursor:Phaser.CursorKeys;
         global:any;
+        lives;
+        labelLives:Phaser.Text;
 
         preload():void
         {
@@ -34,8 +36,9 @@ module Game {
         }
 
         create():void
-        {
+        {   
             super.create();
+            this.lives = 3;
             this.global = (<SuperAlejandro>this.game).global;
             this.cursor = this.input.keyboard.createCursorKeys();
             this.configureMap();
@@ -43,6 +46,7 @@ module Game {
             this.configureFlys();
             this.configureBubles();
             this.configureSnails();
+            this.livesLabel();
             //Cambiamos los límites del mapa para ajustarlos al tamaño de nuestro mapa
             this.world.setBounds(0, 0, 21000, 700);
         }
@@ -77,13 +81,23 @@ module Game {
                 'playerSprites');
             //Damos el anchor adecuado para que concuerde con el dibujo
             this.player.anchor.setTo(0.5, 0.5);
-            this.configureAnimations();
+
+            this.configurePlayerAnimations();
+
             //Otorgamos físicas al sprite
             this.physics.arcade.enable(this.player);
+
             //Le damos gravedad para que no se quede volando al saltar
             this.player.body.gravity.y = 800;
             //Le otorgamos rozamiento para que no se deslice permanentemente
             this.player.body.drag.x = 800;
+
+            /*//Hacemos que el player choque con los límites del mapa
+            this.player.body.collideWorldBounds = true;
+            //Hacemos que compruebe si se choca
+            this.player.checkWorldBounds = true;
+            //Si
+            this.player.events.onOutOfBounds.add(this.killBall, this);*/
             //Restringimos la velocidad máxima
             this.player.body.maxVelocity.x = this.global.PLAYER_MAX_VELOCITY_X;
             //Fijamos la cámara en el player
@@ -126,13 +140,25 @@ module Game {
         }
         
         //Método para añadir animations al player mediante un JsonAtlas
-        configureAnimations()
+        configurePlayerAnimations()
         {
             this.player.animations.add('waiting', ['wait1'], 1, true);
             this.player.animations.add('move',
                 ['move1', 'move2', 'move3', 'move4', 'move5', 'move6', 'move7', 'move8'],
                 10, true);
             this.player.animations.add('jump', ['jump1', 'jump2'], 2, true);
+        }
+
+        livesLabel():void
+        {
+            //Creamos un label con el número de vidas
+            this.labelLives = this.add.text(
+                90, 50, 'Lives: '+this.lives,
+                {font: '35px Arial', fill: '#AS2700'}
+            );
+            this.labelLives.anchor.setTo(0.5, 0.5);
+            //Fijamos el label a la cámara
+            this.labelLives.fixedToCamera = true;
         }
 
         update():void {
@@ -190,6 +216,24 @@ module Game {
         {
             this.game.physics.arcade.collide(this.player, this.ground);
             this.game.physics.arcade.collide(this.player, this.touchable);
+            if (this.player.y > this.world.height)
+            {
+                this.killPlayer();
+            }
+        }
+        killPlayer():void
+        {
+            this.player.kill();
+            this.lives = this.lives-1;
+            this.labelLives.setText('Lives: '+this.lives);
+            if (this.lives == 0)
+            {
+                this.game.state.start('gameOverStage');
+            }
+            else
+            {
+                this.configurePlayer();
+            }
         }
     }
 }

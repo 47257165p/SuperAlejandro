@@ -3,27 +3,35 @@
  */
 
 module Game {
-    export class MenuStage extends Phaser.State 
+    export class GameOverStage extends Phaser.State
     {
-        create():void {
+        gameName;
+        pressLabel;
+        preload():void
+        {
+            super.preload();
+        }
+        create():void
+        {
+            super.create();
             //Damos color al background del menú
-            this.game.stage.backgroundColor = "#4488AA";
+            this.game.stage.backgroundColor = "#aaaaa";
 
             //Creamos un label con el nombre del juegoNombre del juego
-            var nameLabel = this.game.add.text(
-                this.world.centerX, 80, 'SuperAlejandro Game',
+            this.gameName = this.add.text(
+                700, 100, 'SuperAlejandro Game',
                 {font: '50px Arial', fill: '#ffffff'}
             );
-            nameLabel.anchor.setTo(0.5, 0.5);
-
+            this.gameName.anchor.setTo(0.5, 0.5);
+            this.gameName.fixedToCamera = true;
             //Información de cómo empezar
-            var startLabel = this.add.text(
-                this.world.centerX,
-                this.world.centerY,
-                'Press enter to start',
+            this.pressLabel = this.game.add.text(
+                700,
+                200,
+                'GAME OVER Press enter to restart',
                 {font: '25px Arial', fill: '#ffffff'}
             );
-            startLabel.anchor.setTo(0.5, 0.5);
+            this.pressLabel.anchor.setTo(0.5, 0.5);
 
             //Creamos el input del enter
             var pressEnter = this.input.keyboard.addKey(Phaser.Keyboard.ENTER);
