@@ -128,12 +128,6 @@ var Game;
             this.player.body.gravity.y = 800;
             //Le otorgamos rozamiento para que no se deslice permanentemente
             this.player.body.drag.x = 800;
-            /*//Hacemos que el player choque con los límites del mapa
-            this.player.body.collideWorldBounds = true;
-            //Hacemos que compruebe si se choca
-            this.player.checkWorldBounds = true;
-            //Si
-            this.player.events.onOutOfBounds.add(this.killBall, this);*/
             //Restringimos la velocidad máxima
             this.player.body.maxVelocity.x = this.global.PLAYER_MAX_VELOCITY_X;
             //Fijamos la cámara en el player
@@ -144,10 +138,17 @@ var Game;
         FirstStage.prototype.configureFlys = function () {
             //Creamos el grupo de flys
             this.flys = this.game.add.group();
-            this.flys.enableBody = true;
             //Creamos todos los objetos flys cuya id sea 170 mediante la imagen precargada flyFly1
             //y se lo añadimos al grupo flys
             this.tilemap.createFromObjects('flys', 170, 'flyFly1', 0, true, false, this.flys);
+            //Otorgamos físicas al grupo de sprites
+            this.flys.physicsBodyType = Phaser.Physics.ARCADE;
+            this.flys.enableBody = true;
+            this.flys.setAll('body.velocity.x', 500);
+            /*this.flys.body.velocity.x = 100 * this.rnd.sign();
+            this.flys.body.bounce.x = 1;
+            this.flys.checkWorldBounds = true;
+            this.flys.outOfBoundsKill = true;*/
         };
         FirstStage.prototype.configureBubles = function () {
             //Creamos el grupo de bubles
@@ -222,6 +223,12 @@ var Game;
         FirstStage.prototype.checkCollide = function () {
             this.game.physics.arcade.collide(this.player, this.ground);
             this.game.physics.arcade.collide(this.player, this.touchable);
+            //Asignamos los overlaps con los tres tipos de enemigos que encontramos y llamamos a la función killplayer
+            //si el player toca a alguno de éstos
+            this.physics.arcade.overlap(this.player, this.flys, this.killPlayer, null, this);
+            this.physics.arcade.overlap(this.player, this.bubles, this.killPlayer, null, this);
+            this.physics.arcade.overlap(this.player, this.snails, this.killPlayer, null, this);
+            //Si el player cae
             if (this.player.y > this.world.height) {
                 this.killPlayer();
             }
