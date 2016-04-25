@@ -113,12 +113,6 @@ module Game {
             //Otorgamos físicas al grupo de sprites
             this.flys.physicsBodyType = Phaser.Physics.ARCADE;
             this.flys.enableBody = true;
-            this.flys.setAll('body.velocity.x', 500);
-            /*this.flys.body.velocity.x = 100 * this.rnd.sign();
-            this.flys.body.bounce.x = 1;
-            this.flys.checkWorldBounds = true;
-            this.flys.outOfBoundsKill = true;*/
-
         }
 
         configureBubles():void
@@ -252,3 +246,8 @@ module Game {
         }
     }
 }
+/*this.flys.setAll('gravity.y', 500, this);
+ this.flys.body.velocity.x = 100 * this.rnd.sign();
+ this.flys.body.bounce.x = 1;
+ this.flys.checkWorldBounds = true;
+ this.flys.outOfBoundsKill = true;*/

@@ -19,7 +19,7 @@ var Game;
             this.state.start("menuStage");
         }
         return SuperAlejandro;
-    }(Phaser.Game));
+    })(Phaser.Game);
     Game.SuperAlejandro = SuperAlejandro;
 })(Game || (Game = {}));
 window.onload = function () {
@@ -54,7 +54,7 @@ var Game;
             this.game.state.start('firstStage');
         };
         return MenuStage;
-    }(Phaser.State));
+    })(Phaser.State);
     Game.MenuStage = MenuStage;
 })(Game || (Game = {}));
 /**
@@ -144,11 +144,6 @@ var Game;
             //Otorgamos físicas al grupo de sprites
             this.flys.physicsBodyType = Phaser.Physics.ARCADE;
             this.flys.enableBody = true;
-            this.flys.setAll('body.velocity.x', 500);
-            /*this.flys.body.velocity.x = 100 * this.rnd.sign();
-            this.flys.body.bounce.x = 1;
-            this.flys.checkWorldBounds = true;
-            this.flys.outOfBoundsKill = true;*/
         };
         FirstStage.prototype.configureBubles = function () {
             //Creamos el grupo de bubles
@@ -249,9 +244,14 @@ var Game;
             }
         };
         return FirstStage;
-    }(Phaser.State));
+    })(Phaser.State);
     Game.FirstStage = FirstStage;
 })(Game || (Game = {}));
+/*this.flys.setAll('gravity.y', 500, this);
+ this.flys.body.velocity.x = 100 * this.rnd.sign();
+ this.flys.body.bounce.x = 1;
+ this.flys.checkWorldBounds = true;
+ this.flys.outOfBoundsKill = true;*/ 
 /**
  * Created by Alejandro on 24/04/2016.
  */
@@ -286,7 +286,7 @@ var Game;
             this.game.state.start('firstStage');
         };
         return GameOverStage;
-    }(Phaser.State));
+    })(Phaser.State);
     Game.GameOverStage = GameOverStage;
 })(Game || (Game = {}));
 //# sourceMappingURL=Main.js.map
